@@ -2,709 +2,763 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Memória Dueto - Jogo da Memória para Duas Pessoas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+    <title>Plataforma Formatura 2026 · Sistema Premium</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            user-select: none;
         }
 
         body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f0f2f8;
+            color: #0b1a33;
+            padding: 28px 24px;
             min-height: 100vh;
-            background: linear-gradient(145deg, #1a472a 0%, #0e2a1a 100%);
-            font-family: 'Segoe UI', 'Poppins', 'Quicksand', system-ui, -apple-system, 'Inter', sans-serif;
             display: flex;
             justify-content: center;
-            align-items: center;
-            padding: 20px;
+            line-height: 1.6;
         }
 
-        /* Container principal */
-        .game-container {
-            max-width: 1300px;
+        .app {
+            max-width: 1480px;
             width: 100%;
-            background: rgba(255, 248, 225, 0.15);
-            backdrop-filter: blur(3px);
-            border-radius: 64px;
-            padding: 20px 25px 30px;
-            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.2);
-            transition: all 0.2s ease;
         }
 
-        /* Painel de pontuação e turno */
-        .score-panel {
+        /* ============================================================
+           HEADER PREMIUM
+           ============================================================ */
+        .header {
+            background: linear-gradient(145deg, #0b1a33 0%, #1e3a6b 100%);
+            border-radius: 32px;
+            padding: 28px 36px;
+            margin-bottom: 28px;
+            box-shadow: 0 20px 48px -12px rgba(11, 26, 51, 0.35);
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
-            gap: 20px;
-            margin-bottom: 35px;
-        }
-
-        .player-card {
-            flex: 1;
-            background: #fef7e0;
-            border-radius: 48px;
-            padding: 18px 20px;
-            text-align: center;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s, box-shadow 0.2s, border 0.2s;
-            border: 3px solid transparent;
-        }
-
-        .player-card.active-turn {
-            border-color: #ffb347;
-            background: #fff5e6;
-            transform: scale(1.02);
-            box-shadow: 0 0 0 4px rgba(255, 180, 71, 0.5), 0 12px 28px black;
-        }
-
-        .player-name {
-            font-size: 1.8rem;
-            font-weight: 800;
-            letter-spacing: 1px;
-            background: linear-gradient(135deg, #2c5e2e, #1d3e1a);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
-        }
-
-        .player-score {
-            font-size: 3rem;
-            font-weight: 900;
-            color: #d68b2c;
-            line-height: 1;
-            margin: 10px 0 5px;
-            text-shadow: 2px 2px 0 #ffe0a3;
-        }
-
-        .turn-indicator {
-            font-size: 1rem;
-            font-weight: bold;
-            background: #f2c94c;
-            display: inline-block;
-            padding: 6px 18px;
-            border-radius: 40px;
-            color: #2c2c2c;
-        }
-
-        /* Área do tabuleiro */
-        .board {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 18px;
-            justify-items: center;
             align-items: center;
-            margin: 20px 0 25px;
-        }
-
-        /* Cartas lindas e vivas */
-        .card {
-            width: 100%;
-            aspect-ratio: 3 / 4;
-            max-width: 140px;
-            background: radial-gradient(circle at 30% 25%, #fff9e8, #ffefcf);
-            border-radius: 28px;
-            cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            box-shadow: 0 15px 20px -8px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 215, 0, 0.12);
             position: relative;
-            transform-style: preserve-3d;
-            transform: rotateY(0deg);
+            overflow: hidden;
         }
 
-        /* Estrutura de frente/verso */
-        .card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.4s ease-in-out;
-            transform-style: preserve-3d;
-            border-radius: 28px;
-        }
-
-        .card.flipped .card-inner {
-            transform: rotateY(180deg);
-        }
-
-        .card-front, .card-back {
+        .header::before {
+            content: "✦";
             position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            font-weight: bold;
-            box-sizing: border-box;
+            right: 20px;
+            top: -30px;
+            font-size: 180px;
+            color: rgba(255, 215, 0, 0.035);
+            pointer-events: none;
+            transform: rotate(12deg);
         }
 
-        .card-front {
-            background: linear-gradient(145deg, #ffdd99, #ffcc77);
-            transform: rotateY(180deg);
-            color: #a55820;
-            text-shadow: 2px 2px 0 rgba(0,0,0,0.1);
-            border: 2px solid #ffb347;
-            box-shadow: inset 0 0 0 3px rgba(255,215,130,0.8);
+        .header::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #fbbf24, #f59e0b, transparent);
+            opacity: 0.3;
         }
 
-        .card-back {
-            background: repeating-linear-gradient(45deg, #ffb882, #ffb882 12px, #ffa559 12px, #ffa559 24px);
-            border-radius: 28px;
-            border: 2px solid #f5e2b0;
-            color: #fff2d0;
-            font-size: 2.6rem;
-            font-weight: bold;
+        .header-left {
             display: flex;
             flex-direction: column;
-            gap: 6px;
-        }
-        .card-back::before {
-            content: "?";
-            font-size: 3.5rem;
-            opacity: 0.8;
-            font-weight: 800;
-        }
-        .card-back::after {
-            content: "🐾";
-            font-size: 1.8rem;
-            opacity: 0.7;
+            gap: 4px;
+            z-index: 1;
         }
 
-        /* estados especiais */
-        .card.matched {
-            filter: drop-shadow(0 0 12px #ffd966);
-            opacity: 0.7;
-            cursor: default;
-            transform: scale(0.97);
-            filter: grayscale(0.2) brightness(1.05);
-            pointer-events: none;
-        }
-        .card.matched .card-front {
-            background: linear-gradient(145deg, #b5d3a0, #9cc97a);
-            color: #3c6e2f;
-            border-color: gold;
-        }
-
-        .card.disabled-temp {
-            pointer-events: none;
-            filter: brightness(0.96);
-        }
-
-        /* Botão reset + mensagens */
-        .action-area {
+        .header-left .logo {
             display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .header-left .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 215, 0, 0.15);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
             justify-content: center;
-            gap: 25px;
-            margin-top: 15px;
+            font-size: 1.6rem;
+            border: 1px solid rgba(255, 215, 0, 0.15);
+        }
+
+        .header-left h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            color: #ffffff;
+        }
+
+        .header-left h1 span {
+            color: #fcd34d;
+            font-weight: 500;
+        }
+
+        .header-left .subtitle {
+            color: #b9c8e0;
+            font-size: 0.9rem;
+            font-weight: 400;
+            margin-left: 58px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            z-index: 1;
             flex-wrap: wrap;
         }
 
-        .btn {
-            background: #fdd48d;
-            border: none;
-            font-size: 1.2rem;
-            font-weight: bold;
-            padding: 12px 28px;
+        .header-badge {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(8px);
+            padding: 10px 22px;
             border-radius: 60px;
-            cursor: pointer;
-            transition: 0.15s linear;
-            color: #3b2a1f;
-            box-shadow: 0 6px 0 #b97f2e;
-            font-family: inherit;
-        }
-        .btn:active {
-            transform: translateY(2px);
-            box-shadow: 0 3px 0 #b97f2e;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            color: #facc15;
+            font-weight: 500;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .message {
+        .header-badge .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #34d399;
+            border-radius: 50%;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.4;
+                transform: scale(0.85);
+            }
+        }
+
+        /* ============================================================
+           COUNTDOWN GLOBAL - DESTAQUE
+           ============================================================ */
+        .countdown-global {
+            background: linear-gradient(145deg, #0b1a33 0%, #1e3a6b 100%);
+            border-radius: 24px;
+            padding: 18px 28px;
+            margin-bottom: 28px;
+            border: 1px solid rgba(255, 215, 0, 0.12);
+            box-shadow: 0 8px 32px rgba(11, 26, 51, 0.15);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .countdown-global::before {
+            content: "⏳";
+            position: absolute;
+            right: -10px;
+            top: -30px;
+            font-size: 140px;
+            opacity: 0.04;
+            pointer-events: none;
+        }
+
+        .countdown-global .label {
+            color: #b9c8e0;
+            font-size: 0.9rem;
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .countdown-global .label strong {
+            color: #fcd34d;
+            font-weight: 600;
+        }
+
+        .countdown-global .display {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .countdown-global .item {
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 8px 14px;
             text-align: center;
-            background: #2d2b1fcc;
-            backdrop-filter: blur(8px);
-            padding: 10px 20px;
-            border-radius: 60px;
-            color: #ffefc0;
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin-top: 20px;
+            min-width: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
         }
 
-        /* Modal de entrada dos jogadores */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(8px);
+        .countdown-global .item .number {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #fcd34d;
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .countdown-global .item .label-small {
+            font-size: 0.55rem;
+            text-transform: uppercase;
+            color: #94a3b8;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+
+        .countdown-global .separator {
+            color: #fcd34d;
+            font-size: 1.8rem;
+            font-weight: 300;
+            opacity: 0.3;
+            margin: 0 -2px;
+        }
+
+        .countdown-global .date-info {
+            color: #94a3b8;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .countdown-global .date-info strong {
+            color: #fcd34d;
+            font-weight: 500;
+        }
+
+        /* ============================================================
+           TABS NAV
+           ============================================================ */
+        .tabs-nav {
+            display: flex;
+            gap: 6px;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 6px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e8edf5;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: 180px;
+            padding: 14px 28px;
+            border: none;
+            background: transparent;
+            border-radius: 16px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
-            transition: all 0.2s;
+            gap: 10px;
+            font-family: 'Inter', sans-serif;
         }
-        .modal-card {
-            background: #fff7e8;
-            max-width: 450px;
-            width: 90%;
-            border-radius: 64px;
-            padding: 35px 30px;
-            text-align: center;
-            box-shadow: 0 30px 40px black;
-            border: 1px solid #ffc857;
+
+        .tab-btn:hover {
+            background: #f1f4f9;
+            color: #0b1a33;
         }
-        .modal-card h2 {
-            font-size: 2rem;
-            color: #4a6a2f;
-            margin-bottom: 25px;
+
+        .tab-btn.active {
+            background: #0b1a33;
+            color: #ffffff;
+            box-shadow: 0 4px 16px rgba(11, 26, 51, 0.2);
         }
-        .modal-card input {
-            display: block;
-            width: 100%;
-            margin: 18px 0;
-            padding: 14px 18px;
+
+        .tab-btn .icon {
             font-size: 1.2rem;
-            border-radius: 48px;
-            border: 2px solid #e1b87c;
-            background: white;
-            outline: none;
-            font-family: inherit;
-        }
-        .modal-card button {
-            background: #ffb347;
-            font-size: 1.3rem;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 48px;
-            font-weight: bold;
-            margin-top: 15px;
-            cursor: pointer;
         }
 
-        @media (max-width: 650px) {
-            .board {
-                gap: 12px;
+        /* ============================================================
+           TAB CONTENT
+           ============================================================ */
+        .tab-content {
+            display: none;
+            animation: fadeSlide 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeSlide {
+            0% {
+                opacity: 0;
+                transform: translateY(12px);
             }
-            .player-name {
-                font-size: 1.2rem;
-            }
-            .player-score {
-                font-size: 2.2rem;
-            }
-            .card-front, .card-back {
-                font-size: 2rem;
+            100% {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
 
-        footer {
-            text-align: center;
+        /* ============================================================
+           DASHBOARD CARDS
+           ============================================================ */
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 18px;
+            margin-bottom: 32px;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 22px 24px 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.02);
+            border: 1px solid #e8edf5;
+            transition: all 0.25s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px -8px rgba(11, 26, 51, 0.08);
+            border-color: #d0dcec;
+        }
+
+        .card-label {
             font-size: 0.7rem;
-            margin-top: 15px;
-            opacity: 0.7;
-            color: #efe3c1;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            color: #64748b;
+            font-weight: 600;
+            margin-bottom: 6px;
         }
-    </style>
-</head>
-<body>
 
-<div class="game-container" id="gameContainer" style="display: none;">
-    <div class="score-panel">
-        <div class="player-card" id="player1Card">
-            <div class="player-name" id="p1Name">Jogador 1</div>
-            <div class="player-score" id="p1Score">0</div>
-            <div class="turn-indicator" id="p1TurnBadge"></div>
-        </div>
-        <div class="player-card" id="player2Card">
-            <div class="player-name" id="p2Name">Jogador 2</div>
-            <div class="player-score" id="p2Score">0</div>
-            <div class="turn-indicator" id="p2TurnBadge"></div>
-        </div>
-    </div>
-    <div class="board" id="board"></div>
-    <div class="action-area">
-        <button class="btn" id="resetGameBtn">🔄 Reiniciar Jogo</button>
-        <button class="btn" id="newPlayersBtn">👥 Trocar Jogadores</button>
-    </div>
-    <div class="message" id="statusMsg">Clique nas cartas! Combine os pares.</div>
-    <footer>✨ Memória Dueto - Turnos alternados, quem faz mais pares vence! ✨</footer>
-</div>
+        .card-value {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #0b1a33;
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
 
-<!-- Modal inicial para nomes -->
-<div id="nameModal" class="modal">
-    <div class="modal-card">
-        <h2>🎴 Bem-vindos ao Dueto da Memória</h2>
-        <input type="text" id="player1NameInput" placeholder="Nome do Jogador 1" autocomplete="off">
-        <input type="text" id="player2NameInput" placeholder="Nome do Jogador 2" autocomplete="off">
-        <button id="startGameBtn">✨ Começar Jogo ✨</button>
-        <div style="margin-top: 16px; font-size: 0.9rem;">🌈 Jogo para 2 pessoas: acerte um par e jogue novamente, erre e passa a vez!</div>
-    </div>
-</div>
+        .card-value small {
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: #64748b;
+        }
 
-<script>
-    // ---------- Configuração do jogo ----------
-    // Conjunto de ícones bonitos e modernos (tema nature/divertido)
-    const ICON_SET = [
-        "🐶", "🐱", "🐭", "🐹", "🐰", "🦊", "🐻", "🐼",
-        "🐨", "🐯", "🦁", "🐮", "🐷", "🐸", "🐙", "🦄"
-    ];
-    
-    let gameBoard = [];         // array de objetos: { id, icon, matched, flipped, cardElement, pairId }
-    let cardsElements = [];
-    let currentPlayer = 0;      // 0 = jogador1, 1 = jogador2
-    let players = ["Jogador 1", "Jogador 2"];
-    let scores = [0, 0];
-    let lockBoard = false;      // trava enquanto animação ou checagem
-    let firstCard = null;
-    let secondCard = null;
-    let timeoutId = null;
-    let totalPairs = 8;          // 8 pares -> 16 cartas
-    let matchedCount = 0;
-    let gameActive = true;
+        .card-value .pill {
+            background: #dcfce7;
+            color: #166534;
+            font-size: 0.6rem;
+            font-weight: 600;
+            padding: 2px 14px;
+            border-radius: 40px;
+            letter-spacing: 0.3px;
+            border: 1px solid #bbf7d0;
+        }
 
-    // DOM elements
-    const boardDiv = document.getElementById('board');
-    const p1NameSpan = document.getElementById('p1Name');
-    const p2NameSpan = document.getElementById('p2Name');
-    const p1ScoreSpan = document.getElementById('p1Score');
-    const p2ScoreSpan = document.getElementById('p2Score');
-    const p1TurnBadge = document.getElementById('p1TurnBadge');
-    const p2TurnBadge = document.getElementById('p2TurnBadge');
-    const statusMsgDiv = document.getElementById('statusMsg');
-    const resetBtn = document.getElementById('resetGameBtn');
-    const newPlayersBtn = document.getElementById('newPlayersBtn');
-    const gameContainer = document.getElementById('gameContainer');
-    const nameModal = document.getElementById('nameModal');
-    const startBtn = document.getElementById('startGameBtn');
-    const p1Input = document.getElementById('player1NameInput');
-    const p2Input = document.getElementById('player2NameInput');
+        /* ============================================================
+           SEARCH
+           ============================================================ */
+        .search-bar {
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: flex-end;
+        }
 
-    // Função auxiliar para embaralhar (Fisher-Yates)
-    function shuffleArray(arr) {
-        for (let i = arr.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [arr[i], arr[j]] = [arr[j], arr[i]];
+        .search-wrapper {
+            position: relative;
+            width: 320px;
         }
-        return arr;
-    }
 
-    // Inicializar ou reiniciar o tabuleiro (mantém os nomes atuais)
-    function initGame(keepScores = false) {
-        // cancelar qualquer timeout pendente
-        if (timeoutId) clearTimeout(timeoutId);
-        lockBoard = false;
-        firstCard = null;
-        secondCard = null;
-        matchedCount = 0;
-        gameActive = true;
-        
-        if (!keepScores) {
-            scores = [0, 0];
-            updateScoresUI();
+        .search-wrapper input {
+            width: 100%;
+            padding: 12px 20px 12px 48px;
+            border: 2px solid #e2e8f0;
+            border-radius: 60px;
+            font-size: 0.95rem;
+            background: #ffffff;
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+            color: #0b1a33;
+            font-family: 'Inter', sans-serif;
         }
-        
-        // criar pares embaralhados
-        let selectedIcons = ICON_SET.slice(0, totalPairs);
-        let deck = [];
-        for (let i = 0; i < totalPairs; i++) {
-            deck.push({ pairId: i, icon: selectedIcons[i] });
-            deck.push({ pairId: i, icon: selectedIcons[i] });
+
+        .search-wrapper input::placeholder {
+            color: #94a3b8;
         }
-        deck = shuffleArray(deck);
-        
-        // construir estrutura gameBoard
-        gameBoard = deck.map((item, idx) => ({
-            id: idx,
-            pairId: item.pairId,
-            icon: item.icon,
-            matched: false,
-            flipped: false,
-            element: null
-        }));
-        
-        // renderizar as cartas no DOM
-        renderBoard();
-        
-        // atualizar interface de turno
-        updateTurnUI();
-        statusMsgDiv.innerHTML = `🎲 Vez de ${players[currentPlayer]}! Encontre um par e jogue novamente.`;
-    }
-    
-    function renderBoard() {
-        boardDiv.innerHTML = '';
-        cardsElements = [];
-        gameBoard.forEach((card, index) => {
-            const cardDiv = document.createElement('div');
-            cardDiv.className = 'card';
-            if (card.matched) cardDiv.classList.add('matched');
-            if (card.flipped) cardDiv.classList.add('flipped');
-            
-            const inner = document.createElement('div');
-            inner.className = 'card-inner';
-            
-            const front = document.createElement('div');
-            front.className = 'card-front';
-            front.textContent = card.icon;
-            const back = document.createElement('div');
-            back.className = 'card-back';
-            
-            inner.appendChild(front);
-            inner.appendChild(back);
-            cardDiv.appendChild(inner);
-            
-            cardDiv.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (!gameActive) return;
-                if (lockBoard) return;
-                if (card.matched) return;
-                if (card.flipped) return;
-                if (secondCard !== null && firstCard !== null) return; // esperando reset
-                handleCardClick(index);
-            });
-            
-            boardDiv.appendChild(cardDiv);
-            card.element = cardDiv;
-            cardsElements.push(cardDiv);
-        });
-    }
-    
-    function updateSingleCardUI(cardIdx) {
-        const card = gameBoard[cardIdx];
-        const el = card.element;
-        if (!el) return;
-        if (card.matched) {
-            el.classList.add('matched');
-            el.classList.remove('flipped');
-        } else if (card.flipped) {
-            el.classList.add('flipped');
-            el.classList.remove('matched');
-        } else {
-            el.classList.remove('flipped');
-            el.classList.remove('matched');
+
+        .search-wrapper input:focus {
+            outline: none;
+            border-color: #1e3a6b;
+            box-shadow: 0 4px 20px rgba(30, 58, 107, 0.08);
         }
-    }
-    
-    function handleCardClick(clickedIdx) {
-        if (lockBoard) return;
-        const clickedCard = gameBoard[clickedIdx];
-        if (clickedCard.matched) return;
-        if (clickedCard.flipped) return;
-        
-        // Se já existe primeira carta virada e segunda é nula, ou vice versa
-        if (firstCard === null) {
-            // vira primeira carta
-            flipCardOpen(clickedIdx);
-            firstCard = clickedIdx;
-        } 
-        else if (secondCard === null && firstCard !== clickedIdx) {
-            flipCardOpen(clickedIdx);
-            secondCard = clickedIdx;
-            // verificar par
-            lockBoard = true;
-            checkMatch();
+
+        .search-wrapper .icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1rem;
+            color: #94a3b8;
+            pointer-events: none;
         }
-        else if (secondCard === null && firstCard === clickedIdx) {
-            // mesma carta, ignora
-            return;
+
+        /* ============================================================
+           TABLE
+           ============================================================ */
+        .table-container {
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.02);
+            border: 1px solid #e8edf5;
+            overflow: hidden;
+            max-height: 560px;
+            overflow-y: auto;
+            overflow-x: auto;
         }
-    }
-    
-    function flipCardOpen(idx) {
-        if (gameBoard[idx].flipped) return;
-        gameBoard[idx].flipped = true;
-        updateSingleCardUI(idx);
-    }
-    
-    function flipCardClose(idx) {
-        if (!gameBoard[idx].flipped) return;
-        gameBoard[idx].flipped = false;
-        updateSingleCardUI(idx);
-    }
-    
-    function checkMatch() {
-        const card1 = gameBoard[firstCard];
-        const card2 = gameBoard[secondCard];
-        const isMatch = (card1.pairId === card2.pairId);
-        
-        if (isMatch) {
-            // acertou: marca como matched e incrementa pontuação do jogador atual
-            card1.matched = true;
-            card2.matched = true;
-            updateSingleCardUI(firstCard);
-            updateSingleCardUI(secondCard);
-            matchedCount++;
-            
-            // soma ponto para o jogador atual
-            scores[currentPlayer]++;
-            updateScoresUI();
-            
-            // verifica se acabou o jogo
-            if (matchedCount === totalPairs) {
-                endGame();
-                lockBoard = false;
-                firstCard = null;
-                secondCard = null;
-                return;
-            }
-            
-            // jogador ganha ponto e continua jogando (não muda turno)
-            statusMsgDiv.innerHTML = `🎉 ${players[currentPlayer]} acertou! +1 ponto. Jogue novamente! 🎉`;
-            // limpar seleções, mas mantém turno
-            firstCard = null;
-            secondCard = null;
-            lockBoard = false;
-            // atualizar UI de turno (mesmo jogador continua)
-            updateTurnUI();
-        } 
-        else {
-            // erro: mostra mensagem e depois de 0.8s desvira, troca turno
-            statusMsgDiv.innerHTML = `❌ ${players[currentPlayer]} errou! Vez de ${players[currentPlayer === 0 ? 1 : 0]}. ❌`;
-            // bloquear cliques durante o delay
-            lockBoard = true;
-            timeoutId = setTimeout(() => {
-                // desvirar as duas cartas se não estiverem matched
-                if (!gameBoard[firstCard].matched) flipCardClose(firstCard);
-                if (!gameBoard[secondCard].matched) flipCardClose(secondCard);
-                // trocar turno
-                currentPlayer = currentPlayer === 0 ? 1 : 0;
-                updateTurnUI();
-                // reset temporário
-                firstCard = null;
-                secondCard = null;
-                lockBoard = false;
-                timeoutId = null;
-                // mensagem de nova vez
-                statusMsgDiv.innerHTML = `🎲 Agora é a vez de ${players[currentPlayer]}. Boa sorte!`;
-            }, 800);
+
+        .table-container::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
         }
-    }
-    
-    function updateScoresUI() {
-        p1ScoreSpan.innerText = scores[0];
-        p2ScoreSpan.innerText = scores[1];
-    }
-    
-    function updateTurnUI() {
-        // remove classe active dos dois
-        const p1CardDiv = document.getElementById('player1Card');
-        const p2CardDiv = document.getElementById('player2Card');
-        p1CardDiv.classList.remove('active-turn');
-        p2CardDiv.classList.remove('active-turn');
-        
-        if (currentPlayer === 0) {
-            p1CardDiv.classList.add('active-turn');
-            p1TurnBadge.innerText = "🔵 SUA VEZ";
-            p2TurnBadge.innerText = "";
-        } else {
-            p2CardDiv.classList.add('active-turn');
-            p2TurnBadge.innerText = "🔴 SUA VEZ";
-            p1TurnBadge.innerText = "";
+
+        .table-container::-webkit-scrollbar-track {
+            background: #f0f2f8;
         }
-        // Atualiza nomes se tiver alteração (já estão setados)
-    }
-    
-    function endGame() {
-        gameActive = false;
-        let winnerMsg = "";
-        if (scores[0] > scores[1]) {
-            winnerMsg = `🏆 Vitória de ${players[0]} com ${scores[0]} pontos! 🏆`;
-        } else if (scores[1] > scores[0]) {
-            winnerMsg = `🏆 Vitória de ${players[1]} com ${scores[1]} pontos! 🏆`;
-        } else {
-            winnerMsg = `🤝 Empate! ${players[0]} e ${players[1]} fizeram ${scores[0]} pontos cada. 🤝`;
+
+        .table-container::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
         }
-        statusMsgDiv.innerHTML = `✨ FIM DE JOGO! ✨ ${winnerMsg} ✨ Clique em Reiniciar para nova partida.`;
-        lockBoard = true; // impede novos cliques
-    }
-    
-    function resetGameSession() {
-        if (timeoutId) clearTimeout(timeoutId);
-        lockBoard = false;
-        firstCard = null;
-        secondCard = null;
-        gameActive = true;
-        // reinicia placar e tabuleiro mantendo nomes
-        scores = [0, 0];
-        updateScoresUI();
-        currentPlayer = 0;   // jogador 1 começa
-        initGame(true);      // true para manter os scores já zerados (keepScores mas passamos false antes? melhor usar initGame com reset total)
-        // Mas initGame(keepScores=false) vai zerar scores novamente, porém chamamos antes e já zeramos, melhor chamar initGame sem keepScores mas já zerei
-        // Para evitar duplicidade, chamo initGame com keepScores false mas scores já está 0,0 então ok
-        // O initGame(false) zera scores novamente e recria deck
-        // Para garantir, chamamos:
-        // Mas precisamos resetar matchedCount, etc.
-        // Vamos simplesmente chamar initGame(false)
-        initGame(false);
-        statusMsgDiv.innerHTML = `🔄 Jogo reiniciado! Vez de ${players[0]}. Faça pares!`;
-    }
-    
-    function changePlayers() {
-        // mostrar modal e esconder jogo
-        gameContainer.style.display = "none";
-        nameModal.style.display = "flex";
-        // limpar inputs e preencher com os atuais se desejar (opcional)
-        p1Input.value = players[0];
-        p2Input.value = players[1];
-        // qualquer timeout pendente cancelar
-        if (timeoutId) clearTimeout(timeoutId);
-    }
-    
-    function startGameWithNames() {
-        let name1 = p1Input.value.trim();
-        let name2 = p2Input.value.trim();
-        if (name1 === "") name1 = "Mestre(a)🐣";
-        if (name2 === "") name2 = "Desbravador(a)🦊";
-        players[0] = name1;
-        players[1] = name2;
-        p1NameSpan.innerText = players[0];
-        p2NameSpan.innerText = players[1];
-        
-        // resetar pontuações e estado
-        scores = [0, 0];
-        currentPlayer = 0;
-        updateScoresUI();
-        // iniciar o jogo do zero
-        initGame(false);
-        // esconder modal e mostrar container
-        nameModal.style.display = "none";
-        gameContainer.style.display = "block";
-        // atualizar mensagem
-        statusMsgDiv.innerHTML = `🎴 Partida iniciada! ${players[0]} vs ${players[1]}. ${players[0]} começa!`;
-        updateTurnUI();
-    }
-    
-    // Event listeners
-    resetBtn.addEventListener('click', () => {
-        if (!gameContainer.style.display === 'block') return;
-        resetGameSession();
-    });
-    
-    newPlayersBtn.addEventListener('click', () => {
-        changePlayers();
-    });
-    
-    startBtn.addEventListener('click', () => {
-        startGameWithNames();
-    });
-    
-    // Permitir iniciar com enter nos inputs
-    p1Input.addEventListener('keypress', (e) => { if (e.key === 'Enter') startGameWithNames(); });
-    p2Input.addEventListener('keypress', (e) => { if (e.key === 'Enter') startGameWithNames(); });
-    
-    // Inicialmente mostrar modal e garantir que nenhum jogo ativo
-    gameContainer.style.display = "none";
-    nameModal.style.display = "flex";
-    
-    // pré definição para demonstração (opcional)
-    p1Input.value = "Aventureiro(a)";
-    p2Input.value = "Explorador(a)";
-</script>
-</body>
-</html>
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.85rem;
+            min-width: 1150px;
+        }
+
+        thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        thead th {
+            background: #f8fafc;
+            padding: 16px 14px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: #475569;
+            border-bottom: 2px solid #e2e8f0;
+            white-space: nowrap;
+        }
+
+        thead th:first-child {
+            padding-left: 24px;
+            min-width: 220px;
+        }
+
+        thead th:last-child {
+            padding-right: 24px;
+        }
+
+        thead th .highlight-trote {
+            color: #1e40af;
+            background: #eff6ff;
+            padding: 2px 12px;
+            border-radius: 12px;
+        }
+
+        thead th .highlight-rifa {
+            color: #92400e;
+            background: #fffbeb;
+            padding: 2px 12px;
+            border-radius: 12px;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #f1f4f9;
+            transition: background 0.15s ease;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background: #fafbfd;
+        }
+
+        tbody td {
+            padding: 14px 14px;
+            vertical-align: middle;
+            color: #1e293b;
+            border-bottom: 1px solid #f1f4f9;
+            text-align: center;
+        }
+
+        tbody td:first-child {
+            font-weight: 500;
+            padding-left: 24px;
+            color: #0b1a33;
+            text-align: left;
+        }
+
+        tbody td:last-child {
+            padding-right: 24px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            border-radius: 40px;
+            font-size: 1rem;
+            background: transparent;
+            transition: 0.1s ease;
+        }
+
+        .status-badge.pago {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .status-badge.nao-pago {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .col-trote {
+            background: #eff6ff;
+            border-radius: 6px;
+        }
+
+        .col-rifa {
+            background: #fffbeb;
+            border-radius: 6px;
+        }
+
+        td.col-trote,
+        td.col-rifa {
+            text-align: center;
+            padding: 8px 6px;
+        }
+
+        /* Alertas */
+        tr.alerta-3-meses {
+            background-color: #fef9e7 !important;
+            border-left: 4px solid #f59e0b;
+        }
+
+        tr.alerta-3-meses:hover {
+            background-color: #fef3c7 !important;
+        }
+
+        tr.alerta-4-meses {
+            background-color: #fee2e2 !important;
+            border-left: 4px solid #dc2626;
+            opacity: 0.85;
+        }
+
+        tr.alerta-4-meses:hover {
+            background-color: #fecaca !important;
+        }
+
+        tr.alerta-4-meses td:first-child::after {
+            content: " 🚫";
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+
+        /* ============================================================
+           INFORMAÇÕES - Layout Refinado
+           ============================================================ */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 28px;
+        }
+
+        .info-main {
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 36px;
+            border: 1px solid #e8edf5;
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.02);
+        }
+
+        .info-main .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #0b1a33;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-main .section-subtitle {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f1f4f9;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid #f1f4f9;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-item .emoji-box {
+            width: 44px;
+            height: 44px;
+            background: #f1f4f9;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+
+        .info-item .content {
+            flex: 1;
+        }
+
+        .info-item .content .label {
+            font-weight: 600;
+            color: #0b1a33;
+            font-size: 0.9rem;
+        }
+
+        .info-item .content .value {
+            color: #475569;
+            font-size: 0.95rem;
+            margin-top: 2px;
+        }
+
+        .info-item .content .value .highlight {
+            color: #1e3a6b;
+            font-weight: 600;
+        }
+
+        .info-item .content .badge {
+            display: inline-block;
+            background: #eff6ff;
+            color: #1e40af;
+            padding: 2px 14px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            margin-left: 8px;
+        }
+
+        .info-item .content .badge-gold {
+            background: #fef9e7;
+            color: #92400e;
+        }
+
+        .info-item .content ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 6px;
+        }
+
+        .info-item .content ul li {
+            padding: 4px 0;
+            color: #475569;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-item .content ul li::before {
+            content: "•";
+            color: #1e3a6b;
+            font-weight: 700;
+        }
+
+        /* Sidebar */
+        .info-side {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .side-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 24px 28px;
+            border: 1px solid #e8edf5;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.02);
+            transition: all 0.2s ease;
+        }
+
+        .side-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+        }
+
+        .side-card .icon-big {
+            font-size: 1.8rem;
+            margin-bottom: 6px;
+        }
+
+        .side-card h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #0b1a33;
+            margin-bottom: 4px;
+        }
+
+        .side-card p {
+            color: #64748b;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .side-card .contact {
+            color: #1e3a6b;
+         
